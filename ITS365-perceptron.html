@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Perceptron</title>
+    <link rel="stylesheet" href="ITS365-art.css">
+</head>
+
+<body>
+
+<h1>Perceptron</h1>
+
+<main>
+
+<!-- Switches -->
+<div>
+    <input type="checkbox" id="switch1">
+    <input type="checkbox" id="switch2">
+    <input type="checkbox" id="switch3">
+    <input type="checkbox" id="switch4"><br>
+
+    <input type="checkbox" id="switch5">
+    <input type="checkbox" id="switch6">
+    <input type="checkbox" id="switch7">
+    <input type="checkbox" id="switch8"><br>
+
+    <input type="checkbox" id="switch9">
+    <input type="checkbox" id="switch10">
+    <input type="checkbox" id="switch11">
+    <input type="checkbox" id="switch12"><br>
+
+    <input type="checkbox" id="switch13">
+    <input type="checkbox" id="switch14">
+    <input type="checkbox" id="switch15">
+    <input type="checkbox" id="switch16">
+</div>
+
+<div class = "controls">
+	<button onclick="runPerceptron()">Run</button>
+	<p id="output">Output: </p>
+</div>
+<br>
+
+<!-- Grid -->
+<div class="grid-container">
+    <div id="box1" class="gridbox"></div>
+    <div id="box2" class="gridbox"></div>
+    <div id="box3" class="gridbox"></div>
+    <div id="box4" class="gridbox"></div>
+
+    <div id="box5" class="gridbox"></div>
+    <div id="box6" class="gridbox"></div>
+    <div id="box7" class="gridbox"></div>
+    <div id="box8" class="gridbox"></div>
+
+    <div id="box9" class="gridbox"></div>
+    <div id="box10" class="gridbox"></div>
+    <div id="box11" class="gridbox"></div>
+    <div id="box12" class="gridbox"></div>
+
+    <div id="box13" class="gridbox"></div>
+    <div id="box14" class="gridbox"></div>
+    <div id="box15" class="gridbox"></div>
+    <div id="box16" class="gridbox"></div>
+</div>
+
+
+</main>
+
+<footer></footer>
+
+<script>
+for (let i = 1; i <= 16; i++) {
+    const checkbox = document.getElementById("switch" + i);
+    const box = document.getElementById("box" + i);
+
+    checkbox.addEventListener("change", function () {
+        if (checkbox.checked) {
+            box.style.backgroundColor = "black";
+        } else {
+            box.style.backgroundColor = "#ccc";
+        }
+    });
+}
+
+function getInputVector() {
+    let input = [];
+
+    for (let i = 1; i <= 16; i++) {
+        let checkbox = document.getElementById("switch" + i);
+        input.push(checkbox.checked ? 1 : 0);
+    }
+
+    return input;
+}
+
+const models = [
+    { weights: [0.2,0.5,0.5,0.2, 0,0.6,0.6,0, 0,0.6,0.6,0, 0,0.6,0.6,0], bias: -1 }, // T
+    { weights: [0.6,0,0,0, 0.6,0,0,0, 0.6,0,0,0, 0.6,0.6,0.6,0.6], bias: -1 }, // L
+    { weights: [0,0.5,0.5,0, 0.6,0.6,0.6,0.6, 0,0.5,0.5,0, 0,0.5,0.5,0], bias: -1 }, // t
+    { weights: [0,0.5,0,0, 0,0.5,0,0, 0,0.5,0,0, 0,0.5,0.5,0], bias: -1 }  // l
+];
+
+function predictMulticlass(input) {
+
+    let scores = [];
+
+    for (let m = 0; m < models.length; m++) {
+
+        let sum = 0;
+
+        for (let i = 0; i < 16; i++) {
+            sum += input[i] * models[m].weights[i];
+        }
+
+        sum += models[m].bias;
+
+        scores.push(sum);
+    }
+
+    let maxIndex = scores.indexOf(Math.max(...scores));
+
+    return maxIndex;
+}
+
+function runPerceptron() {
+
+    let input = getInputVector();
+
+    let result = predictMulticlass(input);
+
+    let labels = ["T", "L", "t", "l"];
+
+    document.getElementById("output").innerText =
+        "Output: " + labels[result];
+}
+
+
+</script>
+
+</body>
+</html>
